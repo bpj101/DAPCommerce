@@ -1,0 +1,17 @@
+{
+  "name": "dapcommerce",
+  "description": "A ecommerce website",
+  "main": "dap.js",
+  "authors": [
+    "Dame Agnes Productions"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/bpj101/DAPCommerce",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
