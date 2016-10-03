@@ -1,8 +1,4 @@
 'use strict';
-
-
-console.log('this' + process.env.NODE_ENV);
-
 if (process.env.NODE_ENV === 'production') {
     // Offer productions stage environment variables
     module.exports = {

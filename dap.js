@@ -16,6 +16,12 @@ const express = require('express'),
 const dap = express(),
     port = config.port;
 
+// Acquiring Models
+const
+    User = require('./models/user'),
+    Category = require('./models/category');
+
+
 mongoose.connect(config.dbURI, function(err) {
     if (err) {
         console.log(err);
@@ -50,14 +56,22 @@ dap.use((req, res, next) => {
     next();
 });
 
+dap.use((req, res, next) => {
+    Category.find({}, (err, categories) => {
+        if (err) next(err);
+        res.locals.categories = categories;
+        next();
+    });
+});
+
 
 dap.set('views', path.join(__dirname, '/views'));
 dap.set('view engine', 'pug');
 
 // All Routes
+dap.use(require('./routes/admin'));
 dap.use(require('./routes/main'));
 dap.use(require('./routes/user'));
-
 // Server
 dap.listen(port, function(err) {
     if (err) throw err;
