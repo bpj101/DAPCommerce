@@ -1,0 +1,28 @@
+nav.navbar.navbar-inverse.navbar-fixed-top
+	.container
+		.navbar-header
+			button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+				span.sr-only Toggle navigation     
+				span.icon-bar     
+				span.icon-bar      
+				span.icon-bar  
+			a.navbar-brand(href='/') DAPCommerce
+		#navbar.navbar-collapse.collapse
+			ul.nav.navbar-nav.navbar-right
+				if !user
+					li
+						a(href="#" class="dropdown-toggle" data-toggle="dropdown") Signup | Login
+						ul.dropdown-menu
+							li
+								a(href="/signup") Signup
+							li
+								a(href="/login") Login
+				else
+					li
+						a(href="#" class="dropdown-toggle" data-toggle="dropdown") Logged In As: #{user.profile.name}
+						ul.dropdown-menu
+							li
+								a(href="profile") Profile
+							li
+								a(href="logout") Logout
+		<!--/.navbar-collapse -->

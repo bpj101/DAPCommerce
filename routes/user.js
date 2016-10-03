@@ -2,12 +2,42 @@
 
 const
     User = require('../models/user'),
-    routes = require('express').Router();
+    routes = require('express').Router(),
+    passport = require('passport'),
+    passportConf = require('../config/passport');
+
+
+routes.get('/login', (req, res, next) => {
+    if (req.user) {
+        return res.redirect('/profile');
+    }
+    res.render('accounts/login', {
+        message: req.flash('loginMessage'),
+    });
+});
+
+routes.post('/login', passport.authenticate('local-login', {
+    successRedirect: '/profile',
+    failureRedirect: '/login',
+    failureFlash: true
+}));
+
+routes.get('/profile', passportConf.isAuthenticated, function(req, res, next) {
+    User.findOne({
+        _id: req.user._id
+    }, (err, user) => {
+        if (err) return next(err);
+        res.render('accounts/profile', {
+            message: req.flash('loginMessage'),
+            user: user
+        });
+    });
+});
 
 routes.get('/signup', (req, res, next) => {
- res.render('../views/accounts/signup', {
-     message: req.flash('msg')
- });
+    res.render('accounts/signup', {
+        errors: req.flash('msg'),
+    });
 
 });
 
@@ -15,8 +45,9 @@ routes.get('/signup', (req, res, next) => {
 routes.post('/signup', (req, res, next) => {
     let user = new User();
     user.profile.name = req.body.name;
-    user.password = req.body.passward;
+    user.password = req.body.password;
     user.email = req.body.email;
+    user.profile.picture = user.gravatar();
 
     User.findOne({
         email: req.body.email
@@ -27,11 +58,42 @@ routes.post('/signup', (req, res, next) => {
         } else {
             user.save((err) => {
                 if (err) return next(err);
-                req.flash('msg', 'New Account saved');
-                return res.redirect('/');
+                req.flash('loginMessage', 'New Account saved');
+                req.logIn(user, (input) => {
+                    if (err) return next(err);
+                    res.redirect('/profile');
+                });
             });
         }
     });
+});
+
+routes.get('/edit-profile', (req, res, next) => {
+    res.render('accounts/edit-profile', {
+        message: req.flash('success')
+    });
+});
+
+routes.post('/edit-profile', (req, res, next) => {
+    User.findOne({
+        _id: req.user._id
+    }, (err, user) => {
+        if (err) return next(err);
+
+        if (req.body.name) user.profile.name = req.body.name;
+        if (req.body.address) user.address = req.body.address;
+
+        user.save((err) => {
+            if (err) return next(err);
+            req.flash('success', 'Profile Updated');
+            return res.redirect('/edit-profile');
+        });
+    });
+});
+
+routes.get('/logout', (req, res, next) => {
+    req.logOut();
+    res.redirect('/');
 });
 
 module.exports = routes;

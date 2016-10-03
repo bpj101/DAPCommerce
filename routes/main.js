@@ -6,13 +6,14 @@ const
 // Routes
 
 routes.get('/', function(req, res, next) {
-    res.render('../views/main', {
-        message: req.flash('msg')
+    res.render('main', {
+        message: req.flash('msg'),
+        user: req.user
     });
 });
 
 routes.get('/about', function(req, res, next) {
-    res.render('../views/about', {
+    res.render('about', {
         message: req.flash('msg')
     });
 });

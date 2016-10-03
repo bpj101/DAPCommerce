@@ -1,0 +1,29 @@
+extends ../layout.pug
+
+block title
+	title Profile
+
+block content
+	.container
+		if (message.length > 0)
+			.alert.alert-success.alert-dismissible
+				button(type="button"
+								class="close"
+								data-dismiss="alert"
+								aria-label="close")
+					span(aria-hidden="true") &times;
+				#{message}
+		.row
+			.col-sm-6.col-md-4
+				img(class="img-circle img-respinsive img-center" src=user.profile.picture alt="User Avatar")
+				br
+				p Name: #{user.profile.name}
+				p Email: #{user.email}
+				if(user.address === "" || typeof user.address === 'undefined')
+					p 
+						| Address: 
+						span(style="color:#c0392b; font-weight: bold") You have no Address
+				else
+					p Address: #{user.address}
+
+				a(href="/edit-profile" class="btn btn-primary" ) Edit

@@ -5,11 +5,13 @@ const express = require('express'),
     config = require('./config'),
     favicon = require('serve-favicon'),
     bodyParser = require('body-parser'),
-    ejs = require('ejs'),
-    engine = require('ejs-mate'),
+    path = require('path'),
+    pug = require('pug'),
     session = require('express-session'),
+    MongoStore = require('connect-mongo')(session),
     cookieParser = require('cookie-parser'),
-    flash = require('express-flash');
+    flash = require('express-flash'),
+    passport = require('passport');
 
 const dap = express(),
     port = config.port;
@@ -34,13 +36,23 @@ dap.use(cookieParser());
 dap.use(session({
     resave: true,
     saveUninitialized: true,
-    secret: config.secretKey
+    secret: config.secretKey,
+    store: new MongoStore({
+        url: config.dbURI,
+        autoReconnect: true
+    })
 }));
 dap.use(flash());
+dap.use(passport.initialize());
+dap.use(passport.session());
+dap.use((req, res, next) => {
+    res.locals.user = req.user;
+    next();
+});
 
 
-dap.engine('ejs', engine);
-dap.set('view engine', 'ejs');
+dap.set('views', path.join(__dirname, '/views'));
+dap.set('view engine', 'pug');
 
 // All Routes
 dap.use(require('./routes/main'));
