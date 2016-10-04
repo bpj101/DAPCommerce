@@ -14,7 +14,7 @@ nav.navbar.navbar-inverse.navbar-fixed-top
 					ul.dropdown-menu
 						- for (var i = 0; i < categories.length; i++)
 								li
-									a(href="#") #{categories[i].name}
+									a(href="/products/"+categories[i]._id) #{categories[i].name}
 				if !user
 					li
 						a(href="#" class="dropdown-toggle" data-toggle="dropdown") Signup | Login

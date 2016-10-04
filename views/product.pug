@@ -1,0 +1,16 @@
+extends ./layout.pug
+
+block title
+  title #{product.name}
+
+block content
+  .container  
+    .row
+      .col-md-6
+        img(src=product.image class="product-img" alt="")
+      .col-md-6
+        .caption
+          h3 #{product.name}
+          a(href="/products/"+product.category._id class="product-category")
+            p #{product.category.name}
+          p $#{product.price}.00

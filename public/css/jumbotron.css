@@ -9,6 +9,21 @@ body {
   margin-top: -50px;
 }
 
+a.product-category {
+  text-decoration: none;
+  color: #333;
+}
+
+a.product-category:hover {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.product-img {
+  max-width: 100%;
+}
+
 footer {
   padding-top: 50px;
 }

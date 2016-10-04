@@ -68,10 +68,13 @@ dap.use((req, res, next) => {
 dap.set('views', path.join(__dirname, '/views'));
 dap.set('view engine', 'pug');
 
+var apiRoutes = require('./api/api');
+
 // All Routes
 dap.use(require('./routes/admin'));
 dap.use(require('./routes/main'));
 dap.use(require('./routes/user'));
+dap.use('/api', apiRoutes);
 // Server
 dap.listen(port, function(err) {
     if (err) throw err;

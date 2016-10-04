@@ -1,0 +1,17 @@
+extends ./layout.pug
+
+block title
+	title Categories
+
+block content
+	.container
+		.row
+		- for (var i = 0; i < products.length; i++)
+			.col-md-3.col-sm-4
+				a(href="/product/"+products[i]._id)
+					.thumbnail
+						img(src=products[i].image alt="")
+						.caption.equalize
+							h3 #{products[i].name}
+							p #{products[i].category.name}
+							p $#{products[i].price}.00
