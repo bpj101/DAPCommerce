@@ -75,6 +75,8 @@ dap.use(require('./routes/admin'));
 dap.use(require('./routes/main'));
 dap.use(require('./routes/user'));
 dap.use('/api', apiRoutes);
+
+
 // Server
 dap.listen(port, function(err) {
     if (err) throw err;

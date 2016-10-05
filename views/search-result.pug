@@ -1,0 +1,22 @@
+extends ./layout.pug
+
+block title
+	title Search Result
+
+block content
+	script.
+		if (categories.length > 0)
+			console.log(#{categories})
+	if data.length === 0
+		h3 Search Not Found.
+	.container
+		.row
+		- for (var i = 0; i < data.length; i++)
+			.col-md-3.col-sm-4
+				a(href="/product/"+data[i]._id)
+					.thumbnail
+						img(src=data[i]._source.image alt="")
+						.caption.equalize
+							h3 #{data[i]._source.name}
+							p #{data[i]._source.category}
+							p $#{data[i]._source.price}
