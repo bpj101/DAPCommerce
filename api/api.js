@@ -7,10 +7,13 @@ const
   Product = require('../models/product');
 
 routes.post('/search', (req, res, next) => {
+  console.log(req.body.search_term);
   Product.search({
     query_string: {
       query: req.body.search_term
     }
+  }, {
+    hydrate: true
   }, (err, results) => {
     res.json(results);
   });

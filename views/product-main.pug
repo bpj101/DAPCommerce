@@ -6,12 +6,17 @@ block title
 block content
 	.jumbotron-gap.jumbotron.jumbotron-fluid
 		.container
-			h1 Shop Smart, Save Big!
-			p Find your favorite Product
-			//- p
-			//- 	a(href="/signup"
-			//- 		class="btn btn-primary btn-lg"
-			//- 		role="button") Signup &raquo;
+			h1.text-center
+				| Shop Smart, Save Big!
+			p.text-center
+				| Find your favorite Product
+			.row
+				.col-md-6.col-md-offset-3
+					.input-group.col-md-12
+						input(type="text" id="search" class="form-control input-lg" name="search_term")
+						span.input-group-btn
+							button(type="submit" class="btn btn-primary btn-lg")
+								i.glyphicon.glyphicon-search
 		
 	if message.length > 0
 		.alert.alert-success.alert-dismissible
@@ -24,16 +29,16 @@ block content
 	
 
 	.container
-		.row
-		- for (var i = 0; i < products.length; i++)
-			.col-md-3.col-sm-4
-				a(href="/product/"+products[i]._id)
-					.thumbnail
-						img(src=products[i].image alt="")
-						.caption.equalize
-							h3 #{products[i].name}
-							p #{products[i].category.name}
-							p $#{products[i].price}
+		#searchResults.row
+			- for (var i = 0; i < products.length; i++)
+				.col-md-3.col-sm-4
+					a(href="/product/"+products[i]._id)
+						.thumbnail
+							img(src=products[i].image alt="")
+							.caption.equalize
+								h3 #{products[i].name}
+								p #{products[i].category.name}
+								p $#{products[i].price}
 
 		ul.pagination.text-center
 			li
