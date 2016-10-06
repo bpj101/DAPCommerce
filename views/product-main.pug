@@ -1,0 +1,46 @@
+extends ./layout.pug
+
+block title
+	title Main Page
+
+block content
+	.jumbotron-gap.jumbotron.jumbotron-fluid
+		.container
+			h1 Shop Smart, Save Big!
+			p Find your favorite Product
+			//- p
+			//- 	a(href="/signup"
+			//- 		class="btn btn-primary btn-lg"
+			//- 		role="button") Signup &raquo;
+		
+	if message.length > 0
+		.alert.alert-success.alert-dismissible
+			button(type="button"
+							class="close"
+							data-dismiss="alert"
+							aria-label="close")
+				span(aria-hidden="true") &times;
+			p #{message}
+	
+
+	.container
+		.row
+		- for (var i = 0; i < products.length; i++)
+			.col-md-3.col-sm-4
+				a(href="/product/"+products[i]._id)
+					.thumbnail
+						img(src=products[i].image alt="")
+						.caption.equalize
+							h3 #{products[i].name}
+							p #{products[i].category.name}
+							p $#{products[i].price}
+
+		ul.pagination.text-center
+			li
+			- for (var i = 1; i < pages; i++)
+				if i === 1
+					li
+						a(href="/") #{i}
+				else
+					li
+						a(href="/page/" + i) #{i}
