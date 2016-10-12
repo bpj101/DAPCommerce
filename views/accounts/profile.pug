@@ -27,3 +27,16 @@ block content
 					p Address: #{user.address}
 
 				a(href="/edit-profile" class="btn btn-primary" ) Edit
+			.col-md-6
+				h2.text-center Purchased Items History
+				table.table.table-striped.sticky-header
+					thead
+						tr
+							th Item's Name
+							th.rightCell Paid:
+					tbody
+						- for (var i = 0; i < user.history.length; i++)
+							tr
+								td #{user.history[i].item.name}
+								td.rightCell $#{user.history[i].paid}
+

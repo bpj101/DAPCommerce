@@ -26,14 +26,16 @@ routes.post('/login', passport.authenticate('local-login', {
 
 routes.get('/profile', passportConf.isAuthenticated, function(req, res, next) {
   User.findOne({
-    _id: req.user._id
-  }, (err, user) => {
-    if (err) return next(err);
-    res.render('accounts/profile', {
-      message: req.flash('msg'),
-      user: user
+      _id: req.user._id
+    })
+    .populate('history.item')
+    .exec((err, foundUser) => {
+      if (err) return next(err);
+      res.render('accounts/profile', {
+        message: req.flash('msg'),
+        user: foundUser
+      });
     });
-  });
 });
 
 routes.get('/signup', (req, res, next) => {

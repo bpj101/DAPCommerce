@@ -33,6 +33,12 @@ a.product-category:hover {
   margin: 0 5px;
 }
 
+.table th.rightCell
+,
+.table td.rightCell {
+  text-align: right;
+}
+
 footer {
   padding-top: 50px;
 }

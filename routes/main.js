@@ -67,7 +67,6 @@ routes.get('/cart', (req, res, next) => {
     .exec((err, foundCart) => {
 
       if (err) return next(err);
-      console.log('this  ' + foundCart);
       res.render('accounts/cart', {
         message: req.flash('msg'),
         foundCart: foundCart
