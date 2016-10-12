@@ -14,7 +14,7 @@ routes.get('/login', (req, res, next) => {
     return res.redirect('/profile');
   }
   res.render('accounts/login', {
-    message: req.flash('loginMessage'),
+    message: req.flash('msg'),
   });
 });
 
@@ -30,7 +30,7 @@ routes.get('/profile', passportConf.isAuthenticated, function(req, res, next) {
   }, (err, user) => {
     if (err) return next(err);
     res.render('accounts/profile', {
-      message: req.flash('loginMessage'),
+      message: req.flash('msg'),
       user: user
     });
   });
@@ -76,7 +76,7 @@ routes.post('/signup', (req, res, next) => {
         if (err) return next(err);
         req.logIn(user, (err) => {
           if (err) return next(err);
-          req.flash('loginMessage', 'New Account saved');
+          req.flash('msg', 'New Account saved');
           res.redirect('/profile');
         });
       });

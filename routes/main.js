@@ -5,7 +5,8 @@ const
   User = require('../models/user'),
   Product = require('../models/product'),
   Cart = require('../models/cart'),
-  stripe = require('stripe')('sk_test_FBfLuKZXURgAU4U6djoCuUVf');
+  stripe = require('stripe')('sk_test_FBfLuKZXURgAU4U6djoCuUVf'),
+  async = require('async');
 
 function paginate(req, res, next) {
   let perPage = 8;
@@ -205,8 +206,51 @@ routes.post('/payment', (req, res, next) => {
       currency: 'usd',
       customer: customer.id
     });
+  }).then((charge) => {
+    async.waterfall([
+      (callback) => {
+        Cart.findOne({
+          owner: req.user._id
+        }, (err, cart) => {
+          if (err) next(err);
+          callback(err, cart);
+        });
+      }, (cart, callback) => {
+        User.findOne({
+          _id: req.user._id
+        }, (err, user) => {
+          if (err) next(err);
+          if (user) {
+            for (var i = 0; i < cart.items.length; i++) {
+              user.history.push({
+                item: cart.items[i].item,
+                paid: cart.items[i].price
+              });
+            }
+            user.save((err, user) => {
+              if (err) return next(err);
+              callback(err, user);
+            });
+          }
+        });
+      }, (user) => {
+        Cart.update({
+          owner: user._id
+        }, {
+          $set: {
+            items: [],
+            total: 0
+          }
+        }, (err, updated) => {
+          if (err) next(err);
+          if (updated) {
+            req.flash('msg', 'Payment transaction completed');
+            res.redirect('/profile');
+          }
+        });
+      }
+    ]);
   });
-  res.redirect('/profile');
 });
 
 
