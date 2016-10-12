@@ -1,16 +1,36 @@
 extends ./layout.pug
 
 block title
-  title #{product.name}
+	title #{product.name}
 
 block content
-  .container  
-    .row
-      .col-md-6
-        img(src=product.image class="product-img" alt="")
-      .col-md-6
-        .caption
-          h3 #{product.name}
-          a(href="/products/"+product.category._id class="product-category")
-            p #{product.category.name}
-          p $#{product.price}.00
+	.container  
+		.row
+			.col-md-6
+				img(src=product.image class="product-image" alt="")
+			.col-md-6
+				.caption
+					h2 #{product.name}
+					a(href="/products/"+product.category._id class="product-category")
+						h3 #{product.category.name}
+					h1 $#{product.price}
+
+				form(method="post")
+					.btn-group(role="group" aria-label="...")
+						input(type="hidden" name="quantity" id="quantity" value="1")
+						button(id="minus"  class="btn btn-default" type="button") -
+						button(id="total"  class="btn btn-default" type="button") 1
+						button(id="plus" class="btn btn-default" type="button") +
+					
+					.form-group
+						input(type="hidden" name="product_id" id="quantity" value=product._id)
+						input(type="hidden" name="priceHidden" id="priceHidden" value=product.price)
+
+						input(type="text" name="item" value=product.name)
+						br
+						input(type="text" name="priceValue" id="priceValue" class="form-control" value=product.price)
+
+					if user
+						button.btn.btn-primary.btn-lg(type="submit") Add to Cart
+					else
+						a.btn.btn-warning.btn-lg(href="/login") Login to make purchase!

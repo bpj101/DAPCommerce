@@ -1,0 +1,122 @@
+extends ../layout.pug
+
+block title
+	title #{user.profile.name}'s Cart
+
+block content
+	
+	.container
+		
+		.row
+			.col-lg-6.col-md-6
+				if message.length > 0
+					.alert.alert-success.alert-dismissible
+						button(type="button"
+										class="close"
+										data-dismiss="alert"
+										aria-label="close")
+							span(aria-hidden="true") &times;
+						p #{message}
+				- for (var i = 0; i < foundCart.items.length; i++)
+					.list-group
+						span.list-group-item
+							.row
+								.col-md-3
+									span
+										img.product-image(src=foundCart.items[i].item.image  alt="")
+								.col-md-6
+									p.list-group-item-heading
+										| #{foundCart.items[i].item.name}
+								.col-md-3
+									p #{foundCart.items[i].quantity}
+									p #{foundCart.items[i].price}
+
+									form(action="/remove" method="post")
+										input(type="hidden" name="item" value=foundCart.items[i]._id)
+										input(type="hidden" name="price" value=foundCart.items[i].price)
+										button.btn.btn-danger(type="submit") Remove
+			
+			// Payment addon
+			.col-md-3.col-md-offset-3
+				.list-group
+					.list-group-item
+						h4 Total: $
+							span.totlalPrice #{foundCart.total}
+						.form-group
+							input(type="hidden" value=foundCart.total)
+							button.btn.btn-primary.btn-lg(type="submit" data-toggle="modal" data-target="#myModal") Pay with Stripe
+		
+
+		// Modal
+		#myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel')
+			.modal-dialog(role='document')
+				.modal-content
+					.modal-header
+						button.close(type='button', data-dismiss='modal', aria-label='Close')
+							span(aria-hidden='true') ×
+						h4#myModalLabel.modal-title Pay with Stripe
+					.modal-body.center-block
+						.container
+							.row
+								//
+									You can make it whatever width you want. I'm making it full width
+									on <= small devices and 4/12 page width on >= medium devices
+								.col-xs-12.col-md-5
+									// CREDIT CARD FORM STARTS HERE
+									.panel.panel-default.credit-card-box
+										.panel-heading.display-table
+											.row.display-tr
+												h3.panel-title.display-td Payment Details
+												.display-td
+													img.img-responsive.pull-right(src='http://i76.imgup.net/accepted_c22e0.png')
+										.panel-body
+											form#payment-form(role='form', method='POST', action='/payment')
+												input(type="hidden" name="stripeMoney" value=foundCart.total)
+												.row
+													.col-xs-12
+														.form-group
+															label(for='cardNumber') CARD NUMBER
+															.input-group
+																input.form-control(type='tel', id="cardNumber" data-stripe='number', placeholder='Valid Card Number', autocomplete='cc-number', required='', autofocus='')
+																span.input-group-addon
+																	i(class="fa fa-credit-card" aria-hidden="true")
+												.row
+													.col-xs-8.col-md-8
+														.form-group
+															label(for='cardExpiry')
+																span.hidden-xs EXPIRATION
+																span.visible-xs-inline EXP
+																|  DATE
+															#cardExpiry
+																.col-xs-5.col-md-5
+																	input.form-control(type='tel', data-stripe='exp_month', placeholder='MM', autocomplete='cc-exp', required='' maxlength="2")
+																.col-xs-1.col-md-1
+																	span /
+																.col-xs-6.col-md-5
+																	input.form-control(type='tel', data-stripe='exp_year', placeholder='YYYY', autocomplete='cc-exp', required='' maxlength="4")
+													.col-xs-4.col-md-4.pull-right
+														.form-group
+															label(for='cardCVC') CV CODE
+															input.form-control(type='tel', id="cardCVC" data-stripe='cvc', placeholder='CVC', autocomplete='cc-csc', required='')
+												.row
+													.col-xs-12
+														.form-group
+															label(for='billZip') BILLING ZIP
+															.input-group
+																input.form-control(type='tel', id="billZip" data-stripe='address_aip', placeholder='Billing Zip', autocomplete='off', required='')
+												//- .row
+												//- 	.col-xs-12
+												//- 		.form-group
+												//- 			label(for='couponCode') COUPON CODE
+												//- 			input.form-control(type='text', name='couponCode')
+												.row
+													.col-xs-12
+														button.subscribe.btn.btn-success.btn-lg.btn-block.submit(type='submit') Pay: $(#{foundCart.total})
+												.row(style='display:none;')
+													.col-xs-12
+														p.payment-errors
+									// CREDIT CARD FORM ENDS HERE
+
+
+
+

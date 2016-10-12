@@ -3,7 +3,9 @@
 const
   routes = require('express').Router(),
   User = require('../models/user'),
-  Product = require('../models/product');
+  Product = require('../models/product'),
+  Cart = require('../models/cart'),
+  stripe = require('stripe')('sk_test_FBfLuKZXURgAU4U6djoCuUVf');
 
 function paginate(req, res, next) {
   let perPage = 8;
@@ -53,6 +55,59 @@ stream.on('error', (err) => {
 });
 
 // Routes
+
+
+routes.get('/cart', (req, res, next) => {
+  Cart
+    .findOne({
+      owner: req.user._id
+    })
+    .populate('items.item')
+    .exec((err, foundCart) => {
+
+      if (err) return next(err);
+      console.log('this  ' + foundCart);
+      res.render('accounts/cart', {
+        message: req.flash('msg'),
+        foundCart: foundCart
+      });
+    });
+});
+
+
+routes.post('/product/:product_id', (req, res, next) => {
+  Cart.findOne({
+    owner: req.user._id
+  }, (err, cart) => {
+    cart.items.push({
+      item: req.body.product_id,
+      price: parseFloat(req.body.priceValue),
+      quantity: parseInt(req.body.quantity)
+    });
+    cart.total = (cart.total + parseFloat(req.body.priceValue)).toFixed(2);
+
+    cart.save((err) => {
+      if (err) return next(err);
+      return res.redirect('/cart');
+    });
+  });
+});
+
+
+routes.post('/remove', (req, res, next) => {
+  Cart.findOne({
+    owner: req.user._id
+  }, (err, foundCart) => {
+    foundCart.items.pull(String(req.body.item));
+
+    foundCart.total = (foundCart.total - parseFloat(req.body.price)).toFixed(2);
+    foundCart.save((err, found) => {
+      if (err) return next(err);
+      req.flash('msg', 'Item removed');
+      res.redirect('/cart');
+    });
+  });
+});
 
 routes.post('/search', (req, res, next) => {
   // additional coding
@@ -137,5 +192,22 @@ routes.get('/product/:id', (req, res, next) => {
       });
     });
 });
+
+routes.post('/payment', (req, res, next) => {
+  let stripToken = req.body.stripeToken;
+  let currentCharges = Math.round(req.body.stripeMoney * 100);
+
+  stripe.customers.create({
+    source: stripToken
+  }).then((customer) => {
+    return stripe.charges.create({
+      amount: currentCharges,
+      currency: 'usd',
+      customer: customer.id
+    });
+  });
+  res.redirect('/profile');
+});
+
 
 module.exports = routes;

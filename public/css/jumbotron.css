@@ -20,14 +20,18 @@ a.product-category:hover {
   cursor: pointer;
 }
 
-.product-img {
-  max-width: 100%;
+.product-image {
+  width: 100%;
+  height: 100%;
 }
 
 #nav-search button.btn.btn-default {
   margin-left: 10px;
 }
 
+.panel-title {
+  margin: 0 5px;
+}
 
 footer {
   padding-top: 50px;
