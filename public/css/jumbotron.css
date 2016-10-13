@@ -33,10 +33,13 @@ a.product-category:hover {
   margin: 0 5px;
 }
 
-.table th.rightCell
-,
+.table th.rightCell,
 .table td.rightCell {
   text-align: right;
+}
+
+a.btn-facebook {
+  margin: 10px 0;
 }
 
 footer {

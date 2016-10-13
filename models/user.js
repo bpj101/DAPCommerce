@@ -13,6 +13,10 @@ const UserSchema = new Schema({
     lowercase: true
   },
   password: String,
+
+  facebook: String,
+  tokens: Array,
+
   profile: {
     name: {
       type: String,

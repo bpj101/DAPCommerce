@@ -109,6 +109,17 @@ routes.post('/edit-profile', (req, res, next) => {
   });
 });
 
+routes.get('/auth/facebook',
+  passport.authenticate('facebook', {
+    scope: 'email'
+  }));
+
+routes.get('/auth/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: '/profile',
+    failureRedirect: '/login'
+  }));
+
 routes.get('/logout', (req, res, next) => {
   req.logOut();
   res.redirect('/');
